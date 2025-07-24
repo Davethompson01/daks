@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>The Daks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Nothing+You+Could+Do&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="top-nav">
+      <div class="nav-left">
+        <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">Twitter</a>
+        <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">MANIFESTO</a>
+      </div>
+      <div class="nav-center">
+        <img src="assets/logo.png" alt="The Daks Logo" class="nav-logo" />
+      </div>
+      <div class="nav-right">
+        <a href="https://verification.thedaks.xyz/" target="_blank" class="roc-link">NFT VERIFACTION</a>
+        <a href="https://discord.gg/thedaks" target="_blank" class="roc-link">Discord</a>
+      </div>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+      <img src="assets/logo.png" alt="The Daks Logo" class="nav-logo" />
+      <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">Twitter</a>
+      <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">MANIFESTO</a>
+      <a href="https://verification.thedaks.xyz/" target="_blank" class="roc-link">NFT VERIFACTION</a>
+      <a href="https://discord.gg/thedaks" target="_blank" class="roc-link">Discord</a>
+    </div>
+    <div class="main-gallery-row">
+      <img src="assets/21.png" alt="Show Community Memes" class="main-gallery-21" />
+      <img src="assets/22.png" alt="Show Bludaks" class="main-gallery-22" />
+    </div>
+
+    <footer
+      class="absolute bottom-0 w-full text-right pr-4 md:pr-10 py-3 md:py-6 text-black font-mono-custom text-base md:text-2xl"
+    >
+      © The Daks - All Rights Will Reserved Soon
+    </footer>
+
+    <!-- Logo ve kayan yazı alanı -->
+    <div class="relative w-full h-screen">
+     
+
+      <div class="marquee-wrapper font-mono-custom text-center">
+        <div class="marquee-content" id="marquee">
+          <span class="marquee-text"
+            >"The Daks is a digital space where identity takes a backseat and
+            expression comes forward"</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Sürüklenebilir nesnelerin bulunacağı konteyner -->
+    <div id="asset-container"></div>
+
+    <!-- Background music -->
+    <audio id="bg-audio-1" src="assets/sniw-crystal.mp3" loop autoplay style="display:none"></audio>
+    <audio id="bg-audio-2" src="assets/somewhere.mp3" loop autoplay style="display:none"></audio>
+    <audio id="bg-audio-3" src="assets/let-it-happen.mp3" loop autoplay style="display:none"></audio>
+
+    <!-- Ana JavaScript Mantığı -->
+    <script src="main.js"></script>
+  </body>
+</html>
