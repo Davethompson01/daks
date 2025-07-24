@@ -283,4 +283,130 @@ window.addEventListener('load', () => {
       });
     });
   }
+
+  // --- GALLERY MODAL LOGIC ---
+  function showGalleryModal(imagePaths) {
+    // Remove existing modal if any
+    const existing = document.getElementById('gallery-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'gallery-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100vw';
+    modal.style.height = '100vh';
+    modal.style.background = 'rgba(30,27,75,0.85)';
+    modal.style.display = 'flex';
+    modal.style.flexDirection = 'column';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.zIndex = '1000';
+    modal.style.overflowY = 'auto';
+    modal.style.padding = '2vw';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.style.position = 'fixed';
+    closeBtn.style.top = '2vw';
+    closeBtn.style.right = '2vw';
+    closeBtn.style.fontSize = '2rem';
+    closeBtn.style.background = 'none';
+    closeBtn.style.color = 'white';
+    closeBtn.style.border = 'none';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.zIndex = '1001';
+    closeBtn.onclick = () => modal.remove();
+    modal.appendChild(closeBtn);
+
+    const gallery = document.createElement('div');
+    gallery.style.display = 'flex';
+    gallery.style.flexWrap = 'wrap';
+    gallery.style.justifyContent = 'center';
+    gallery.style.gap = '1.5vw';
+    gallery.style.marginTop = '3vw';
+
+    if (imagePaths.length === 1) {
+      // Show a single large image (e.g., manifesto)
+      const img = document.createElement('img');
+      img.src = imagePaths[0];
+      img.style.maxWidth = '90vw';
+      img.style.maxHeight = '90vh';
+      img.style.width = 'auto';
+      img.style.height = 'auto';
+      img.style.borderRadius = '1rem';
+      img.style.boxShadow = '0 4px 32px 0 rgba(30,27,75,0.28)';
+      img.style.background = '#fff';
+      img.style.margin = '0 auto';
+      img.style.display = 'block';
+      img.style.objectFit = 'contain';
+      gallery.appendChild(img);
+    } else {
+      imagePaths.forEach(path => {
+        const img = document.createElement('img');
+        img.src = path;
+        img.style.maxWidth = '220px';
+        img.style.maxHeight = '220px';
+        img.style.borderRadius = '0.5rem';
+        img.style.boxShadow = '0 4px 16px 0 rgba(30,27,75,0.18)';
+        img.style.background = '#fff';
+        img.style.margin = '0.5vw';
+        img.style.objectFit = 'contain';
+        gallery.appendChild(img);
+      });
+    }
+    modal.appendChild(gallery);
+    document.body.appendChild(modal);
+  }
+
+  // Add click listeners to main-gallery-21 and main-gallery-22
+  const main21 = document.querySelector('.main-gallery-21');
+  const main22 = document.querySelector('.main-gallery-22');
+  if (main21) {
+    main21.style.cursor = 'pointer';
+    main21.addEventListener('click', () => {
+      showGalleryModal([
+        'communitymemes/1.png',
+        'communitymemes/2.png',
+        'communitymemes/3.png',
+        'communitymemes/4.png',
+        'communitymemes/5.png',
+        'communitymemes/6.png',
+        'communitymemes/7.png',
+        'communitymemes/8.png',
+        'communitymemes/9.png',
+        'communitymemes/10.png',
+        'communitymemes/Gwfxvq2WAAATd41.png',
+      ]);
+    });
+  }
+  if (main22) {
+    main22.style.cursor = 'pointer';
+    main22.addEventListener('click', () => {
+      showGalleryModal([
+        'bludaks/Babass_#56.png',
+        'bludaks/Cramon_#61.png',
+        'bludaks/Depsky_#71.png',
+        'bludaks/Diegovas_#55.png',
+        'bludaks/Fearel_#19.png',
+        'bludaks/FS7_#59.png',
+        'bludaks/Herkel_#87.png',
+        'bludaks/Keone_Hon_#16.png',
+        'bludaks/KingLoui_#96.png',
+        'bludaks/Nini_#98.png',
+        'bludaks/No_Mercy_#68.png',
+        'bludaks/Onigiriyaki_#58.png',
+      ]);
+    });
+  }
+
+  // Show manifesto image in modal when MANIFESTO is clicked
+  const manifestoLinks = Array.from(document.querySelectorAll('a.roc-link')).filter(a => a.textContent.trim().toLowerCase() === 'manifesto');
+  manifestoLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      showGalleryModal(['assets/manifesto.png']); // Replace with your actual image path
+    });
+  });
 })

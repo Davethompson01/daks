@@ -210,12 +210,14 @@ img {
 
 /* Responsive grid for hero and scattered images */
 #asset-container {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2vw 2vw;
   justify-items: center;
   align-items: start;
-  width: 100%;
   margin: 0 auto;
   padding-bottom: 2rem;
   box-sizing: border-box;
