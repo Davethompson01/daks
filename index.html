@@ -7,73 +7,771 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
     <title>The Daks</title>
+    <link rel="icon" type="image/png" href="assets/cute2.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Nothing+You+Could+Do&family=VT323&display=swap"
       rel="stylesheet"
     />
+    <style>
+      html {
+        scroll-behavior: auto !important;
+      }
+
+      /* Font ve temel sayfa stilleri */
+      @font-face {
+        font-family: 'RocGroteskWideBlack';
+        /* Font dosya yolunu kendi projenize göre güncelleyin */
+        src: url('assets/roc-grotesk-wide-black.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      .font-display {
+        font-family: 'Inter', sans-serif;
+      }
+      .font-mono-custom {
+        font-family: 'VT323', monospace;
+      }
+      .font-handwritten {
+        font-family: 'Nothing You Could Do', cursive;
+      }
+
+      body {
+        background-color: #1e1b4b;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        color: black;
+        min-height: 100vh;
+        width: 100vw;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      @media (max-width: 1024px) {
+        .draggable-asset {
+          width: 40vw !important;
+          min-width: 120px;
+          max-width: 220px;
+        }
+      }
+      @media (max-width: 768px) {
+        .draggable-asset {
+          width: 60vw !important;
+          min-width: 80px;
+          max-width: 160px;
+        }
+        .marquee-text {
+          font-size: 1.2rem !important;
+          padding-right: 1.5rem !important;
+        }
+        .marquee-wrapper {
+          top: 8rem !important;
+        }
+        .top-link {
+          font-size: 1rem !important;
+          padding: 0.25rem 0.5rem !important;
+        }
+        footer {
+          font-size: 1rem !important;
+          padding-right: 1.5rem !important;
+        }
+      }
+      @media (max-width: 480px) {
+        .draggable-asset {
+          width: 80vw !important;
+          min-width: 60px;
+          max-width: 120px;
+        }
+        .marquee-text {
+          font-size: 1rem !important;
+          padding-right: 1rem !important;
+        }
+        .marquee-wrapper {
+          top: 6rem !important;
+        }
+        .top-link {
+          font-size: 0.9rem !important;
+          padding: 0.2rem 0.4rem !important;
+        }
+        footer {
+          font-size: 0.9rem !important;
+          padding-right: 0.5rem !important;
+        }
+      }
+
+      .top-link {
+        position: absolute;
+        top: 1.3rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .roc-link {
+        font-family: 'RocGroteskWideBlack', sans-serif;
+        font-size: 1.5rem;
+        font-weight: normal;
+        color: black;
+        letter-spacing: -0.03em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .marquee-wrapper {
+        position: absolute;
+        top: 14rem;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      @media (min-width: 768px) {
+        .marquee-wrapper {
+          top: 19rem;
+        }
+      }
+
+      .marquee-content {
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      .marquee-text {
+        display: inline-block;
+        font-size: 3rem;
+        padding-right: 4rem;
+      }
+
+      /* Sürüklenebilir nesne için stiller */
+      .draggable-asset {
+        position: absolute;
+        height: auto;
+        cursor: grab;
+        user-select: none;
+        z-index: 10;
+        border-radius: 0.5rem;
+        /* Lazy load için başlangıçta görünmez yapıp geçiş efekti ekledik */
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+      }
+
+      /* Resim yüklendiğinde görünecek hale getiren sınıf */
+      .draggable-asset.loaded {
+        opacity: 1;
+      }
+
+      .draggable-asset.dragging {
+        cursor: grabbing;
+        will-change: transform;
+      }
+
+      img {
+        user-drag: none;
+        -webkit-user-drag: none;
+        pointer-events: auto;
+      }
+
+      /* Hide desktop nav links on mobile */
+      @media (max-width: 900px) {
+        .desktop-nav-link { display: none !important; }
+      }
+    </style>
+    <!-- Responsive nav styles -->
+    <style>
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      min-height: 44px !important;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(30,27,75,0.08);
+      z-index: 1100;
+      margin: 0.5rem 1rem;
+      /* bazckground: #fff; */
+      border: none;
+      position: fixed;
+      top: 1rem;
+      right: 1.2rem;
+    }
+    .hamburger-btn span {
+      display: block;
+      width: 28px !important;
+      height: 4px !important;
+      margin: 4px 0;
+      background: #222;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    @media (max-width: 900px) {
+      .hamburger-btn { display: flex !important; }
+      .top-link, .roc-link[style*='left'], .roc-link[style*='right'] { display: none !important; }
+      .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(30,27,75,0.97);
+        z-index: 1001;
+        padding-top: 4.5rem;
+        gap: 2rem;
+        transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        overflow-y: auto;
+        transform: translateY(-30px);
+      }
+      .mobile-nav.open {
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .mobile-nav .nav-logo {
+        width: 160px;
+        height: auto;
+        margin-bottom: 1.5rem;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .mobile-nav {
+  display: none;
+}
+      .mobile-nav .roc-link {
+        color: #fff;
+        font-size: 1.2rem;
+        padding: 0.7rem 1.2rem;
+        border-radius: 0.5rem;
+        background: rgba(255,255,255,0.08);
+        width: 80vw;
+        text-align: center;
+        margin: 0.2rem 0;
+        text-decoration: none;
+        transition: background 0.2s;
+        word-break: break-word;
+      }
+      .mobile-nav .roc-link:hover {
+        background: rgba(255,255,255,0.18);
+      }
+    }
+    @media (max-width: 600px) {
+      .mobile-nav .nav-logo { width: 110px; }
+      .mobile-nav .roc-link { font-size: 1rem; padding: 0.5rem 0.7rem; }
+    }
+    @media (min-width: 901px) {
+      .mobile-nav {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+    }
+    </style>
   </head>
   <body>
-    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="top-nav">
-      <div class="nav-left">
-        <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">Twitter</a>
-        <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">MANIFESTO</a>
-      </div>
-      <div class="nav-center">
-        <img src="assets/logo.png" alt="The Daks Logo" class="nav-logo" />
-      </div>
-      <div class="nav-right">
-        <a href="https://verification.thedaks.xyz/" target="_blank" class="roc-link">NFT VERIFACTION</a>
-        <a href="https://discord.gg/thedaks" target="_blank" class="roc-link">Discord</a>
-      </div>
-    </nav>
-    <div class="mobile-nav" id="mobileNav">
-      <img src="assets/logo.png" alt="The Daks Logo" class="nav-logo" />
-      <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">Twitter</a>
-      <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">MANIFESTO</a>
-      <a href="https://verification.thedaks.xyz/" target="_blank" class="roc-link">NFT VERIFACTION</a>
-      <a href="https://discord.gg/thedaks" target="_blank" class="roc-link">Discord</a>
-    </div>
-    <div class="main-gallery-row">
-      <img src="assets/21.png" alt="Show Community Memes" class="main-gallery-21" />
-      <img src="assets/22.png" alt="Show Bludaks" class="main-gallery-22" />
-    </div>
-
     <footer
       class="absolute bottom-0 w-full text-right pr-4 md:pr-10 py-3 md:py-6 text-black font-mono-custom text-base md:text-2xl"
     >
       © The Daks - All Rights Will Reserved Soon
     </footer>
 
-    <!-- Logo ve kayan yazı alanı -->
-    <div class="relative w-full h-screen">
-     
-
-      <div class="marquee-wrapper font-mono-custom text-center">
-        <div class="marquee-content" id="marquee">
-          <span class="marquee-text"
-            >"The Daks is a digital space where identity takes a backseat and
-            expression comes forward"</span
-          >
-        </div>
+    <!-- Üst linkler -->
+    <a
+      href="https://x.com/thedaks_png"
+      target="_blank"
+      class="absolute top-4 left-2 md:left-4 lg:left-10 px-2 py-1 text-sm md:text-base lg:text-lg roc-link z-20 desktop-nav-link"
+    >
+      Twitter
+    </a>
+    <a
+      href="#manifesto"
+      class="absolute top-4 left-28 md:left-32 lg:left-48 px-2 py-1 text-sm md:text-base lg:text-lg roc-link z-20 desktop-nav-link"
+    >
+      MANIFESTO
+    </a>
+    <a
+      href="https://discord.gg/thedaks"
+      target="_blank"
+      class="absolute top-4 right-2 md:right-4 lg:right-10 px-2 py-1 text-sm md:text-base lg:text-lg roc-link z-20 desktop-nav-link"
+    >
+      Discord
+    </a>
+    <a
+      href="https://verification.thedaks.xyz/"
+      target="_blank"
+      class="absolute top-4 right-32 md:right-40 lg:right-48 px-2 py-1 text-sm md:text-base lg:text-lg roc-link z-20 desktop-nav-link"
+    >
+      NFT VERIFICATION
+    </a>
+    <!-- Hamburger button for mobile -->
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <!-- Mobile nav overlay -->
+    <div class="mobile-nav" id="mobileNav">
+      <img src="assets/logo.png" alt="The Daks Logo" class="nav-logo" />
+      <a href="https://x.com/thedaks_png" target="_blank" class="roc-link">Twitter</a>
+      <a href="#manifesto" class="roc-link">MANIFESTO</a>
+      <a href="https://discord.gg/thedaks" target="_blank" class="roc-link">Discord</a>
+      <a href="https://verification.thedaks.xyz/" target="_blank" class="roc-link">NFT VERIFICATION</a>
+    </div>
+    <!-- Centered logo at the top -->
+    <img
+      src="assets/logo.png"
+      alt="The Daks Logo"
+      class="logo-center-img"
+      style="position: absolute; top: 0.5rem; left: 50%; transform: translateX(-50%); z-index: 50; width: 21rem; max-width: 90vw;"
+      onerror="this.onerror=null;this.src='https://placehold.co/640x200/ffffff/1e1b4b?text=Logo+Bulunamadı';"
+    />
+    <div class="marquee-wrapper font-mono-custom text-center">
+      <div class="marquee-content" id="marquee">
+        <span class="marquee-text">"The Daks is a digital space where identity takes a backseat and expression comes forward"</span>
       </div>
     </div>
 
     <!-- Sürüklenebilir nesnelerin bulunacağı konteyner -->
     <div id="asset-container"></div>
 
-    <!-- Background music -->
-    <audio id="bg-audio-1" src="assets/sniw-crystal.mp3" loop autoplay style="display:none"></audio>
-    <audio id="bg-audio-2" src="assets/somewhere.mp3" loop autoplay style="display:none"></audio>
-    <audio id="bg-audio-3" src="assets/let-it-happen.mp3" loop autoplay style="display:none"></audio>
-
     <!-- Ana JavaScript Mantığı -->
-    <script src="main.js"></script>
+    <script>
+      window.addEventListener('load', () => {
+        // --- Kayan yazı (Marquee) mantığı ---
+        const marquee = document.getElementById('marquee')
+        let offset = 0
+        let paused = false
+        marquee.innerHTML += marquee.innerHTML
+
+        function animateMarquee() {
+          if (!paused) {
+            offset -= 1
+            if (Math.abs(offset) >= marquee.offsetWidth / 2) {
+              offset = 0
+            }
+            marquee.style.transform = `translateX(${offset}px)`
+          }
+          requestAnimationFrame(animateMarquee)
+        }
+        animateMarquee()
+
+        const marqueeWrapper = document.querySelector('.marquee-wrapper')
+        marqueeWrapper.addEventListener('mousedown', () => {
+          paused = true
+        })
+        marqueeWrapper.addEventListener('mouseup', () => {
+          paused = false
+        })
+        marqueeWrapper.addEventListener('mouseleave', () => {
+          paused = false
+        })
+        marqueeWrapper.addEventListener(
+          'touchstart',
+          () => {
+            paused = true
+          },
+          { passive: true },
+        )
+        marqueeWrapper.addEventListener('touchend', () => {
+          paused = false
+        })
+
+        // --- ÇOKLU SÜRÜKLENEBİLİR RESİM OLUŞTURMA ---
+        const assetContainer = document.getElementById('asset-container')
+        const numberOfAssets = 29
+
+        const assetAttributes = [
+          { top: '1750px', left: '540px', width: '290px' }, // 0.png
+          { top: '550px', left: '30px', width: '500px' }, // 1.png
+          { top: '1350px', left: '865px', width: '220px' }, // 2.png
+          { top: '2400px', left: '700px', width: '380px' }, // 3.png
+          { top: '1550px', left: '1300px', width: '180px' }, // 4.png
+          { top: '800px', left: '700px', width: '560px' }, // 5.png
+          { top: '1050px', left: '100px', width: '540px' }, // 6.png
+          { top: '1700px', left: '100px', width: '690px' }, // 7.png
+          { top: '1850px', left: '1300px', width: '350px' }, // 8.png
+          { top: '420px', left: '550px', width: '770px' }, // 9.png
+          { top: '1950px', left: '900px', width: '150px' }, // 10.png
+          { top: '2400px', left: '100px', width: '320px' }, // 11.png
+          { top: '2850px', left: '850px', width: '450px' }, // 12.png
+          { top: '880px', left: '1400px', width: '430px' }, // 13.png
+          { top: '2800px', left: '500px', width: '280px' }, // 14.png
+          { top: '900px', left: '100px', width: '200px' }, // 15.png
+          { top: '2650px', left: '1300px', width: '560px' }, // 16.png
+          { top: '3200px', left: '100px', width: '450px' }, // 17.png
+          { top: '3850px', left: '400px', width: '190px' }, // 18.png
+          { top: '480px', left: '1450px', width: '380px' }, // 19.png
+          { top: '1310px', left: '1300px', width: '600px' }, // 20.png
+          { top: '2100px', left: '770px', width: '150px' }, // 21.png
+          { top: '2105px', left: '1020px', width: '150px' }, // 22.png
+          { top: '3400px', left: '900px', width: '250px' }, // 23.png
+          { top: '3605px', left: '1320px', width: '290px' }, // 24.png
+          { top: '2205px', left: '1320px', width: '450px' }, // 25.png
+          { top: '705px', left: '1120px', width: '450px' }, // 26.png
+          { top: '3605px', left: '820px', width: '450px' }, // 27.png
+          { top: '3605px', left: '1520px', width: '450px' } // 28.png
+        ]
+
+        const ensureMinimumHeight = () => {
+          const allAssets = document.querySelectorAll('.draggable-asset')
+          let maxBottom = 0
+
+          allAssets.forEach((el) => {
+            const top = parseInt(el.style.top || '0', 10)
+            const height = el.offsetHeight || 0
+            const bottom = top + height
+            if (bottom > maxBottom) {
+              maxBottom = bottom
+            }
+          })
+
+          // 100px boşluk payı ekle
+          document.body.style.minHeight = `${maxBottom + 100}px`
+        }
+
+        // Responsive asset positioning and scaling
+        function getResponsiveAssetAttributes(attr) {
+          const width = window.innerWidth
+          let scale = 1
+          let top = parseInt(attr.top)
+          let left = parseInt(attr.left)
+          let w = parseInt(attr.width)
+          if (width > 1680) {
+            // Desktop: use original values
+            return {
+              top: attr.top,
+              left: attr.left,
+              width: attr.width,
+            }
+          } else if (width <= 480) {
+            console.log(width)
+            return {
+              top: `${Math.round((top * scale) % 1900)}px`,
+              left: `${Math.round(left * scale > 480 ? ((left * scale) % 434) - 130 : left * scale)}px`,
+              width: `${Math.round(w * scale)}px`,
+            }
+          } else if (width <= 768) {
+            scale = 0.35
+          } else if (width <= 1024) {
+            scale = 0.53
+          } else if (width <= 1440) {
+            scale = 0.78
+          } else if (width <= 1680) {
+            scale = 0.89
+          }
+          return {
+            top: `${Math.round(top * scale)}px`,
+            left: `${Math.round(left * scale)}px`,
+            width: `${Math.round(w * scale)}px`,
+          }
+        }
+
+        for (let i = 0; i < numberOfAssets; i++) {
+          const imgElement = document.createElement('img')
+
+          imgElement.dataset.src = i === 25 || i === 26 || i === 27 ? `assets/${i}.gif` : `assets/${i}.png`
+          imgElement.alt = `Sürüklenebilir Görsel ${i}`
+          imgElement.classList.add('draggable-asset')
+          imgElement.setAttribute('draggable', 'false')
+
+          if (assetAttributes[i]) {
+            const responsive = getResponsiveAssetAttributes(assetAttributes[i])
+            imgElement.style.top = responsive.top
+            imgElement.style.left = responsive.left
+            imgElement.style.width = responsive.width
+          }
+
+          assetContainer.appendChild(imgElement)
+        }
+
+        // --- LAZY LOADING MANTIĞI ---
+        document.body.style.backgroundImage = "url('assets/bg.png')"
+        let loadedCount = 0
+        const allImages = document.querySelectorAll('.draggable-asset')
+
+        allImages.forEach((img) => {
+          img.onload = () => {
+            img.classList.add('loaded')
+            loadedCount++
+            if (loadedCount === allImages.length) {
+              ensureMinimumHeight() // 🔥 Tüm görseller yüklendiyse çağır
+            }
+          }
+          img.onerror = function () {
+            this.onerror = null
+            this.src = `https://placehold.co/150x150/f97316/white?text=Hata`
+            this.classList.add('loaded')
+            loadedCount++
+            if (loadedCount === allImages.length) {
+              ensureMinimumHeight()
+            }
+          }
+          img.src = img.dataset.src
+        })
+
+        // --- PERFORMANS ODAKLI SÜRÜKLEME MANTIĞI ---
+        let currentDraggable = null
+        let isDragging = false
+        let highestZ = 10
+        let startTop = 0,
+          startLeft = 0
+        let startMouseX = 0,
+          startMouseY = 0
+
+        function onDragStart(e) {
+          const target = e.target
+          if (!target.classList.contains('draggable-asset')) return
+
+          e.preventDefault()
+          currentDraggable = target
+          isDragging = true
+
+          highestZ++
+          currentDraggable.style.zIndex = highestZ
+          currentDraggable.classList.add('dragging')
+
+          startMouseX = e.clientX || e.touches[0].clientX
+          startMouseY = e.clientY || e.touches[0].clientY
+
+          startLeft = parseInt(currentDraggable.style.left, 10)
+          startTop = parseInt(currentDraggable.style.top, 10)
+        }
+
+        function onDrag(e) {
+          if (!isDragging || !currentDraggable) return
+
+          const currentMouseX = e.clientX || e.touches[0].clientX
+          const currentMouseY = e.clientY || e.touches[0].clientY
+          const deltaX = currentMouseX - startMouseX
+          const deltaY = currentMouseY - startMouseY
+
+          requestAnimationFrame(() => {
+            if (!isDragging) return
+            currentDraggable.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`
+          })
+        }
+
+        function onDragEnd(e) {
+          if (!isDragging || !currentDraggable) return
+          isDragging = false
+
+          const computedStyle = window.getComputedStyle(currentDraggable)
+          const transformMatrix = new DOMMatrix(computedStyle.transform)
+          const finalDeltaX = transformMatrix.m41
+          const finalDeltaY = transformMatrix.m42
+
+          let newLeft = startLeft + finalDeltaX
+          let newTop = startTop + finalDeltaY
+
+          // --- DEĞİŞİKLİK: DOĞRU SINIR KONTROLÜ ---
+          const elHeight = currentDraggable.offsetHeight
+          const elWidth = currentDraggable.offsetWidth
+          const bodyWidth = document.body.clientWidth
+          // scrollHeight yerine offsetHeight kullanarak sayfanın büyümesini engelle
+          const boundaryHeight = document.body.offsetHeight
+
+          // Üst sınır
+          //   if (newTop < 0) {
+          //      newTop = 0;
+          //  }
+          // Sol sınır
+          //    if (newLeft < 0) {
+          //       newLeft = 0;
+          //   }
+          // Alt sınır
+          if (newTop + elHeight > boundaryHeight) {
+            newTop = boundaryHeight - elHeight
+          }
+          // Sağ sınır
+          //  if (newLeft + elWidth > bodyWidth) {
+          //      newLeft = bodyWidth - elWidth;
+          //   }
+          // --- SINIR KONTROLÜ BİTTİ ---
+
+          currentDraggable.style.left = `${newLeft}px`
+          currentDraggable.style.top = `${newTop}px`
+
+          currentDraggable.style.transform = ''
+
+          currentDraggable.classList.remove('dragging')
+          currentDraggable = null
+        }
+
+        document.addEventListener('mousedown', onDragStart)
+        document.addEventListener('touchstart', onDragStart, { passive: false })
+        document.addEventListener('mousemove', onDrag)
+        document.addEventListener('touchmove', onDrag, { passive: false })
+        document.addEventListener('mouseup', onDragEnd)
+        document.addEventListener('touchend', onDragEnd)
+
+        // Hamburger menu toggle for mobile nav
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        if (hamburgerBtn && mobileNav) {
+          hamburgerBtn.addEventListener('click', () => {
+            mobileNav.classList.toggle('open');
+            hamburgerBtn.setAttribute('aria-expanded', mobileNav.classList.contains('open') ? 'true' : 'false');
+          });
+          // Optional: close menu when a link is clicked
+          mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              mobileNav.classList.remove('open');
+              hamburgerBtn.setAttribute('aria-expanded', 'false');
+            });
+          });
+        }
+
+      // --- GALLERY MODAL LOGIC ---
+      function showGalleryModal(imagePaths) {
+        // Remove existing modal if any
+        const existing = document.getElementById('gallery-modal');
+        if (existing) existing.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'gallery-modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.background = 'rgba(30,27,75,0.85)';
+        modal.style.display = 'flex';
+        modal.style.flexDirection = 'column';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1000';
+        modal.style.overflowY = 'auto';
+        modal.style.padding = '2vw';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕';
+        closeBtn.style.position = 'fixed';
+        closeBtn.style.top = '2vw';
+        closeBtn.style.right = '2vw';
+        closeBtn.style.fontSize = '2rem';
+        closeBtn.style.background = 'none';
+        closeBtn.style.color = 'white';
+        closeBtn.style.border = 'none';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.zIndex = '1001';
+        closeBtn.onclick = () => modal.remove();
+        modal.appendChild(closeBtn);
+
+        const gallery = document.createElement('div');
+        gallery.style.display = 'flex';
+        gallery.style.flexWrap = 'wrap';
+        gallery.style.justifyContent = 'center';
+        gallery.style.gap = '1.5vw';
+        gallery.style.marginTop = '3vw';
+        imagePaths.forEach(path => {
+          const img = document.createElement('img');
+          img.src = path;
+          img.style.maxWidth = '220px';
+          img.style.maxHeight = '220px';
+          img.style.borderRadius = '0.5rem';
+          img.style.boxShadow = '0 4px 16px 0 rgba(30,27,75,0.18)';
+          img.style.background = '#fff';
+          img.style.margin = '0.5vw';
+          img.style.objectFit = 'contain';
+          gallery.appendChild(img);
+        });
+        modal.appendChild(gallery);
+        document.body.appendChild(modal);
+      }
+
+      // Add click/touch listeners to all images with src='assets/21.png' and src='assets/22.png'
+      function addGalleryListeners() {
+        const main21Imgs = document.querySelectorAll('img[src="assets/21.png"]');
+        const main22Imgs = document.querySelectorAll('img[src="assets/22.png"]');
+        main21Imgs.forEach(img => {
+          img.style.cursor = 'pointer';
+          img.addEventListener('click', () => {
+            showGalleryModal([
+              'communitymemes/1.png',
+              'communitymemes/2.png',
+              'communitymemes/3.png',
+              'communitymemes/4.png',
+              'communitymemes/5.png',
+              'communitymemes/6.png',
+              'communitymemes/7.png',
+              'communitymemes/8.png',
+              'communitymemes/9.png',
+              'communitymemes/10.png',
+              'communitymemes/Gwfxvq2WAAATd41.png',
+            ]);
+          });
+          img.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            showGalleryModal([
+              'communitymemes/1.png',
+              'communitymemes/2.png',
+              'communitymemes/3.png',
+              'communitymemes/4.png',
+              'communitymemes/5.png',
+              'communitymemes/6.png',
+              'communitymemes/7.png',
+              'communitymemes/8.png',
+              'communitymemes/9.png',
+              'communitymemes/10.png',
+              'communitymemes/Gwfxvq2WAAATd41.png',
+            ]);
+          }, { passive: false });
+        });
+        main22Imgs.forEach(img => {
+          img.style.cursor = 'pointer';
+          img.addEventListener('click', () => {
+            showGalleryModal([
+              'bludaks/Babass.png',
+              'bludaks/Cramon.png',
+              'bludaks/Depsky.png',
+              'bludaks/Diegovas.png',
+              'bludaks/Fearel.png',
+              'bludaks/FS7.png',
+              'bludaks/Herkel.png',
+              'bludaks/Keone.png',
+              'bludaks/KingLoui.png',
+              'bludaks/Nini.png',
+              'bludaks/No.png',
+              'bludaks/Onigiriyaki.png',
+            ]);
+          });
+          img.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            showGalleryModal([
+              'bludaks/Babass.png',
+              'bludaks/Cramon.png',
+              'bludaks/Depsky.png',
+              'bludaks/Diegovas.png',
+              'bludaks/Fearel.png',
+              'bludaks/FS7.png',
+              'bludaks/Herkel.png',
+              'bludaks/Keone.png',
+              'bludaks/KingLoui.png',
+              'bludaks/Nini.png',
+              'bludaks/No.png',
+              'bludaks/Onigiriyaki.png',
+            ]);
+          }, { passive: false });
+        });
+      }
+      addGalleryListeners();
+      })
+    </script>
   </body>
 </html>
